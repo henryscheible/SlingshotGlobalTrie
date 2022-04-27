@@ -12,7 +12,7 @@ function list(trie) {
     returnArray.push("");
   }
   keys.shift(); // Remove isTerminal (the first element)
-  keys.forEach((key) => returnArray.push(...list(trie[key])));
+  keys.forEach((key) => returnArray.push(...(list(trie[key]).map((substr) => key + substr))));
   return returnArray;
 }
 
