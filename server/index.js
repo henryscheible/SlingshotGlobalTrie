@@ -1,6 +1,7 @@
 const express = require("express");
-
 const api = express();
+
+
 let head = {
   isTerminal: false,
 };
@@ -26,7 +27,7 @@ api.put("/:keyword", (req, res) => {
     currentNode = currentNode[char];
   }
   currentNode.isTerminal = true;
-  res.send("${keyword} successfully added to trie");
+  res.json({succeeded: true});
 });
 
 api.get("/:keyword", (req, res) => {
@@ -39,6 +40,39 @@ api.get("/:keyword", (req, res) => {
     currentNode = currentNode[char];
   }
   res.json({result: currentNode.isTerminal});
+});
+
+api.get("/autocomplete/:keyword", (req, res) => {
+  const keyword = req.params.keyword;
+  let currentNode = head;
+  for (const char of keyword) {
+    if (currentNode[char] == null) {
+      res.json({suggestions: []});
+    }
+    currentNode = currentNode[char];
+  }
+  res.json({suggestions: list(currentNode).map((x) => keyword + x)});
+});
+
+api.delete("/:keyword", (req, res) => {
+  const keyword = req.params.keyword;
+  let currentNode = head;
+  for (const char of keyword) {
+    if (currentNode[char] == null) {
+      res.status(500).json({error: `${keyword} not present in trie`, succeeded: false});
+    }
+    currentNode = currentNode[char];
+  }
+  if (currentNode.isTerminal) {
+    currentNode.isTerminal = false;
+    res.json({succeeded: true})
+  } else {
+    res.status(500).json({error: `${keyword} not present in trie`, succeeded: false});
+  }
+})
+
+api.get("/", (req, res) => {
+  res.json({result: list(head)});
 });
 
 api.listen(8000, () => {
