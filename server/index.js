@@ -60,7 +60,7 @@ api.delete("/:keyword", (req, res) => {
   let currentNode = exports.head;
   for (const char of keyword) {
     if (currentNode[char] == null) {
-      res.status(500).json({error: `${keyword} not present in trie`, succeeded: false});
+      res.json({error: `${keyword} not present in trie`, succeeded: false});
     }
     currentNode = currentNode[char];
   }
@@ -68,20 +68,13 @@ api.delete("/:keyword", (req, res) => {
     currentNode.isTerminal = false;
     res.json({succeeded: true})
   } else {
-    res.status(500).json({error: `${keyword} not present in trie`, succeeded: false});
+    res.json({error: `${keyword} not present in trie`, succeeded: false});
   }
 })
 
 api.get("/", (req, res) => {
   res.json({result: list(exports.head)});
 });
-
-api.delete("/", (req, res) => {
-  exports.head = {
-    isTerminal: false
-  };
-  res.json({succeeded: true});
-})
 
 const PORT = process.env.PORT || 8000;
 

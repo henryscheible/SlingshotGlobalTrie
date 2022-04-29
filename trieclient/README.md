@@ -31,3 +31,15 @@ Options:
 $ triecli put <keyword>
 Successfully added <keyword> to trie
 ```
+
+## Find Keyword
+```shell
+$ triecli find <keyword>
+```
+
+This command will print `true` if the keyword is found and `false` if the keyword is not found
+
+## Delete Keyword
+```shell
+$ triecli delete <keyword>
+```

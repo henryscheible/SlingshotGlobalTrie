@@ -12,8 +12,6 @@ Production API Endpoint: [`https://trieserver-henryscheible.uc.r.appspot.com/`](
 | GET         | `/autocomplete/<keyword>` | List all keywords starting with `<keyword>` | `{ suggestions: ["<keyword 1>", "<keyword2>", ...]}`                                       |                                                 |
 | PUT         | `/<keyword>`       | Add `<keyword>` to the trie                 | `{ succeeded: true }`                                                                      |
 | DELETE      | `/<keyword>`       | Remove `<keyword>` from the trie            | `{ suceeded: true }` or `{ suceeded: false }` (If the keyword was not already in the trie) |
-| DELETE      | `/`                | Reset the trie to an empty state            | `{ suceeded: true }`                                                                        |
-
 
 ## Local Development
 To speed up development, the server can also be run locally by calling
