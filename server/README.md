@@ -1,5 +1,7 @@
 # Server
-The API server is written with Express.js and deployed to GCloud App Engine. 
+The API server is written with Express.js and deployed to GCloud App Engine.
+
+The trie is stored in memory, not in any persistent way, so restarting or redeploying the server will wipe all data from the trie.
 
 Production API Endpoint: [`https://trieserver-henryscheible.uc.r.appspot.com/`](https://trieserver-henryscheible.uc.r.appspot.com/)
 ## API Specification

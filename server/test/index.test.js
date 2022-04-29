@@ -1,6 +1,7 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const assert = chai.assert;
+const expect = chai.expect;
 chai.should();
 const index = require("../index.js");
 
@@ -158,4 +159,71 @@ describe("global state", () => {
       done();
     })
   })
+
+  it("should delete a keyword correctly", (done) => {
+    const requester = chai.request(index.api).keepOpen();
+    Promise.all([
+      requester.get("/hello"),
+      requester.put("/hello"),
+      requester.get("/hello"),
+      requester.delete("/hello"),
+      requester.get("/hello"),
+    ]).then((responses) => {
+      responses.forEach((res) => res.should.have.status(200));
+      responses[0].body.should.be.eql({result: false});
+      responses[2].body.should.be.eql({result: true});
+      responses[4].body.should.be.eql({result: false});
+      done();
+    })
+  })
+
+  it("should return autocomplete suggestions correctly", (done) => {
+    const requester = chai.request(index.api).keepOpen();
+    Promise.all([
+      requester.put("/hello"),
+      requester.put("/hungry"),
+      requester.put("/human"),
+      requester.put("/banana"),
+      requester.get("/autocomplete/h"),
+    ]).then((responses) => {
+      responses.forEach((res) => res.should.have.status(200));
+      expect(responses[4].body.suggestions).to.eql([
+        "hello", "hungry", "human"
+        ]);
+      done();
+    });
+  });
+
+  it("should display the trie correctly", (done) => {
+    const requester = chai.request(index.api).keepOpen();
+    Promise.all([
+      requester.put("/hello"),
+      requester.put("/hungry"),
+      requester.put("/human"),
+      requester.put("/banana"),
+      requester.get("/"),
+    ]).then((responses) => {
+      responses.forEach((res) => res.should.have.status(200));
+      expect(responses[4].body.result).to.eql(["hello", "hungry", "human", "banana"]);
+      done();
+    })
+  });
+
+  it("should not display deleted items", (done) => {
+    const requester = chai.request(index.api).keepOpen();
+    Promise.all([
+      requester.put("/hello"),
+      requester.put("/hungry"),
+      requester.put("/human"),
+      requester.put("/banana"),
+      requester.delete("/human"),
+      requester.get("/"),
+    ]).then((responses) => {
+      responses.forEach((res) => res.should.have.status(200));
+      expect(responses[5].body.result).to.eql(["hello", "hungry", "banana"]);
+      done();
+    })
+  });
+
+
 })
