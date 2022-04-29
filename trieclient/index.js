@@ -4,7 +4,7 @@ require("yargs/yargs")(process.argv.slice(2))
   .option("url", {
     describe: "the api url to connect to",
     type: "string",
-    default: "http://localhost:8000/"
+    default: "https://trieserver-henryscheible.uc.r.appspot.com/"
   })
   .command(require("./commands/put.js"))
   .command(require("./commands/delete.js"))

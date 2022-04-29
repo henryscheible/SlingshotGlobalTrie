@@ -75,8 +75,10 @@ api.get("/", (req, res) => {
   res.json({result: list(head)});
 });
 
-api.listen(8000, () => {
-  console.log("Server is listening on port 8000");
+const PORT = process.env.PORT || 8000;
+
+api.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
 })
 
 exports.list = list;
