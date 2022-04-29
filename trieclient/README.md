@@ -2,7 +2,7 @@
 ## Installation
 The client is a Node package hosted on the npm registry, so it can be installed with the following command:
 ```shell
-$ npm i -g @henryscheible/trieclient@1.0.0
+$ npm i -g @henryscheible/trieclient@1.1.0
 ```
 ## Usage
 ### Help 
