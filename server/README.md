@@ -1,5 +1,5 @@
 # Server
-The API server is written with Express.js and deployed to GCloud App Engine.
+The API server is written with Express.js and deployed to GCloud App Engine. The client interacts with it by making HTTP requests and processing the responses.
 
 The trie is stored in memory, not in any persistent way, so restarting or redeploying the server will wipe all data from the trie.
 
