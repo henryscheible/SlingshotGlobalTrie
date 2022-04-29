@@ -3,9 +3,9 @@ const axios = require("axios");
 exports.log = console.log;
 exports.error = console.error;
 
-exports.putKeyword = (keyword) => {
+exports.putKeyword = (url, keyword) => {
   axios
-    .put(`http://localhost:8000/${keyword}`)
+    .put(`${url}${keyword}`)
     .then(res => {
       if (res.data.succeeded === undefined) {
         exports.error("Malformed response");
@@ -20,9 +20,9 @@ exports.putKeyword = (keyword) => {
     })
 }
 
-exports.getKeyword = (keyword) => {
+exports.getKeyword = (url, keyword) => {
   axios
-    .get(`http://localhost:8000/${keyword}`)
+    .get(`${url}${keyword}`)
     .then(res => {
       if (res.data.result === undefined) {
         exports.error("Malformed response");
@@ -35,9 +35,9 @@ exports.getKeyword = (keyword) => {
     })
 }
 
-exports.getAutocomplete = (keyword) => {
+exports.getAutocomplete = (url, keyword) => {
   axios
-    .get(`http://localhost:8000/autocomplete/${keyword}`)
+    .get(`${url}autocomplete/${keyword}`)
     .then(res => {
       if (res.data.suggestions === undefined) {
         exports.error("Malformed response");
@@ -56,38 +56,40 @@ exports.getAutocomplete = (keyword) => {
     })
 }
 
-exports.getTrie = () => {
+exports.getTrie = (url) => {
   axios
-    .get(`http://localhost:8000/`)
+    .get(url)
     .then(res => {
       if (res.data.result === undefined) {
-        return({error: "Malformed response"});
+        exports.error("Malformed response");
       } else {
-        let returnStr = "";
-        for (const keyword of res.data.result) {
-          returnStr += keyword + ", ";
+        if (res.data.result.length === 0) {
+          exports.log("Trie empty");
+        } else {
+          for (const keyword of res.data.result) {
+            exports.log(keyword);
+          }
         }
-        return({log: returnStr.slice(0, -2)}); // remove trailing comma
       }
     })
-    .catch(error => {
-      return({error: error});
+    .catch(() => {
+      exports.error("Could not connect to server");
     })
 }
 
-exports.deleteKeyword = (keyword) => {
+exports.deleteKeyword = (url, keyword) => {
   axios
-    .delete(`http://localhost:8000/delete/${keyword}`)
+    .delete(`${url}delete/${keyword}`)
     .then(res => {
       if (res.data.succeeded === undefined) {
-        return({error: "Malformed response"});
+        exports.error("Malformed response");
       } else if (res.data.succeeded) {
-        return({log: "delete successful"});
+        exports.log("Delete successful");
       } else {
-        return({error: "delete unsuccessful"});
+        exports.error("Delete unsuccessful");
       }
     })
-    .catch(error => {
-      return({error: error});
+    .catch(() => {
+      exports.error("Could not connect to server");
     })
 }

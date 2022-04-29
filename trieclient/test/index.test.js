@@ -17,7 +17,7 @@ describe("putKeyword", () => {
   });
 
   it("should connect to the right host", (done) => {
-    client.putKeyword("hello");
+    client.putKeyword("", "hello");
     moxios.wait(() => {
       assert.isDefined(moxios.requests.mostRecent());
       done();
@@ -25,7 +25,7 @@ describe("putKeyword", () => {
   });
 
   it("should receive success status correctly", (done) => {
-    client.putKeyword("hello");
+    client.putKeyword("", "hello");
     moxios.wait(() => {
       let request = moxios.requests.mostRecent();
       request.respondWith({
@@ -41,7 +41,7 @@ describe("putKeyword", () => {
   });
 
   it("should handle malformed response correctly", (done) => {
-    client.putKeyword("hello");
+    client.putKeyword("", "hello");
     moxios.wait(() => {
       let request = moxios.requests.mostRecent();
       request.respondWith({
@@ -56,7 +56,7 @@ describe("putKeyword", () => {
   });
 
   it("should handle error response correctly", (done) => {
-    client.putKeyword("hello");
+    client.putKeyword("", "hello");
     moxios.wait(() => {
       let request = moxios.requests.mostRecent();
       request.respondWith({
@@ -72,7 +72,7 @@ describe("putKeyword", () => {
   });
 
   it("should handle error codes correctly", (done) => {
-    client.putKeyword("hello");
+    client.putKeyword("", "hello");
     moxios.wait(() => {
       let request = moxios.requests.mostRecent();
       request.respondWith({
@@ -81,8 +81,8 @@ describe("putKeyword", () => {
       }).then(() => {
         expect(client.error.called);
         expect(client.error.args[0][0]).to.equal("Could not connect to server");
-        done();
         expect(client.log.notCalled);
+        done();
       });
     });
   });
@@ -101,7 +101,7 @@ describe("getKeyword", () => {
   });
 
   it("should connect to the right host", (done) => {
-    client.getKeyword("hello");
+    client.getKeyword("", "hello");
     moxios.wait(() => {
       assert.isDefined(moxios.requests.mostRecent());
       done();
@@ -109,7 +109,7 @@ describe("getKeyword", () => {
   });
 
   it("should receive success status correctly", (done) => {
-    client.getKeyword("hello");
+    client.getKeyword("", "hello");
     moxios.wait(() => {
       let request = moxios.requests.mostRecent();
       request.respondWith({
@@ -125,7 +125,7 @@ describe("getKeyword", () => {
   });
 
   it("should handle malformed response correctly", (done) => {
-    client.getKeyword("hello");
+    client.getKeyword("", "hello");
     moxios.wait(() => {
       let request = moxios.requests.mostRecent();
       request.respondWith({
@@ -140,7 +140,7 @@ describe("getKeyword", () => {
   });
 
   it("should receive failure response correctly", (done) => {
-    client.getKeyword("hello");
+    client.getKeyword("", "hello");
     moxios.wait(() => {
       let request = moxios.requests.mostRecent();
       request.respondWith({
@@ -156,7 +156,7 @@ describe("getKeyword", () => {
   });
 
   it("should handle error codes correctly", (done) => {
-    client.getKeyword("hello");
+    client.getKeyword("", "hello");
     moxios.wait(() => {
       let request = moxios.requests.mostRecent();
       request.respondWith({
@@ -185,7 +185,7 @@ describe("getAutocomplete", () => {
   });
 
   it("should connect to the right host", (done) => {
-    client.getAutocomplete("hello");
+    client.getAutocomplete("", "hello");
     moxios.wait(() => {
       assert.isDefined(moxios.requests.mostRecent());
       done();
@@ -193,7 +193,7 @@ describe("getAutocomplete", () => {
   });
 
   it("should receive word list correctly", (done) => {
-    client.getAutocomplete("hello");
+    client.getAutocomplete("", "hello");
     moxios.wait(() => {
       let request = moxios.requests.mostRecent();
       request.respondWith({
@@ -210,7 +210,7 @@ describe("getAutocomplete", () => {
   });
 
   it("should handle malformed response correctly", (done) => {
-    client.getAutocomplete("hello");
+    client.getAutocomplete("", "hello");
     moxios.wait(() => {
       let request = moxios.requests.mostRecent();
       request.respondWith({
@@ -225,7 +225,7 @@ describe("getAutocomplete", () => {
   });
 
   it("should receive empty response correctly", (done) => {
-    client.getAutocomplete("hello");
+    client.getAutocomplete("", "hello");
     moxios.wait(() => {
       let request = moxios.requests.mostRecent();
       request.respondWith({
@@ -241,7 +241,7 @@ describe("getAutocomplete", () => {
   });
 
   it("should handle error codes correctly", (done) => {
-    client.getAutocomplete("hello");
+    client.getAutocomplete("", "hello");
     moxios.wait(() => {
       let request = moxios.requests.mostRecent();
       request.respondWith({
@@ -252,6 +252,175 @@ describe("getAutocomplete", () => {
         expect(client.error.args[0][0]).to.equal("Could not connect to server");
         expect(client.log.notCalled);
         done();
+      });
+    });
+  });
+});
+
+describe("getTrie", () => {
+
+  beforeEach(() => {
+    moxios.install();
+    client.log = sinon.spy();
+    client.error = sinon.spy();
+  });
+
+  afterEach(() => {
+    moxios.uninstall();
+  });
+
+  it("should connect to the right host", (done) => {
+    client.getTrie("");
+    moxios.wait(() => {
+      assert.isDefined(moxios.requests.mostRecent());
+      done();
+    });
+  });
+
+  it("should receive word list correctly", (done) => {
+    client.getTrie("");
+    moxios.wait(() => {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+        response: { result: ["word1", "word2"] }
+      }).then(() => {
+        expect(client.log.called);
+        expect(client.log.args[0][0]).to.equal("word1");
+        expect(client.log.args[1][0]).to.equal("word2");
+        expect(client.error.notCalled);
+        done();
+      });
+    });
+  });
+
+  it("should handle malformed response correctly", (done) => {
+    client.getTrie("");
+    moxios.wait(() => {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+        response: {}
+      }).then(() => {
+        expect(client.error.args[0][0]).to.equal("Malformed response");
+        expect(client.log.notCalled);
+        done();
+      });
+    });
+  });
+
+  it("should receive empty response correctly", (done) => {
+    client.getTrie("");
+    moxios.wait(() => {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+        response: {result: []}
+      }).then(() => {
+        expect(client.log.called);
+        expect(client.log.args[0][0]).to.equal("Trie empty");
+        expect(client.error.notCalled);
+        done();
+      });
+    });
+  });
+
+  it("should handle error codes correctly", (done) => {
+    client.getTrie("");
+    moxios.wait(() => {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 400,
+        response: {}
+      }).then(() => {
+        expect(client.error.called);
+        expect(client.error.args[0][0]).to.equal("Could not connect to server");
+        expect(client.log.notCalled);
+        done();
+      });
+    });
+  });
+});
+
+describe("deleteKeyword", () => {
+
+  beforeEach(() => {
+    moxios.install();
+    client.log = sinon.spy();
+    client.error = sinon.spy();
+  });
+
+  afterEach(() => {
+    moxios.uninstall();
+  });
+
+  it("should connect to the right host", (done) => {
+    client.deleteKeyword("", "hello");
+    moxios.wait(() => {
+      assert.isDefined(moxios.requests.mostRecent());
+      done();
+    });
+  });
+
+  it("should receive success status correctly", (done) => {
+    client.deleteKeyword("", "hello");
+    moxios.wait(() => {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+        response: { succeeded: true }
+      }).then(() => {
+        expect(client.log.called);
+        expect(client.log.args[0][0]).to.equal("Delete successful");
+        expect(client.error.notCalled);
+        done();
+      });
+    });
+  });
+
+  it("should handle malformed response correctly", (done) => {
+    client.deleteKeyword("", "hello");
+    moxios.wait(() => {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+        response: {}
+      }).then(() => {
+        expect(client.error.args[0][0]).to.equal("Malformed response");
+        expect(client.log.notCalled);
+        done();
+      });
+    });
+  });
+
+  it("should handle error response correctly", (done) => {
+    client.deleteKeyword("", "hello");
+    moxios.wait(() => {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+        response: {succeeded: false}
+      }).then(() => {
+        expect(client.error.called);
+        expect(client.error.args[0][0]).to.equal("Delete unsuccessful");
+        expect(client.log.notCalled);
+        done();
+      });
+    });
+  });
+
+  it("should handle error codes correctly", (done) => {
+    client.deleteKeyword("", "hello");
+    moxios.wait(() => {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 400,
+        response: {succeeded: false}
+      }).then(() => {
+        expect(client.error.called);
+        expect(client.error.args[0][0]).to.equal("Could not connect to server");
+        done();
+        expect(client.log.notCalled);
       });
     });
   });

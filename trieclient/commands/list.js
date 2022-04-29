@@ -4,6 +4,6 @@ exports.command = 'list'
 
 exports.describe = 'list all keywords in the trie'
 
-exports.handler = () => {
-  request.getTrie();
+exports.handler = (argv) => {
+  request.getTrie(argv.url);
 }

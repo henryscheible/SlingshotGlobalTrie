@@ -5,5 +5,5 @@ exports.command = 'autocomplete <keyword>'
 exports.describe = 'find keywords in trie that start with <keyword>'
 
 exports.handler = (argv) => {
-  request.getAutocomplete(argv.keyword);
+  request.getAutocomplete(argv.url, argv.keyword);
 }
