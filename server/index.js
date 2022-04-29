@@ -2,7 +2,7 @@ const express = require("express");
 const api = express();
 
 
-let head = {
+exports.head = {
   isTerminal: false,
 };
 
@@ -19,7 +19,7 @@ function list(trie) {
 
 api.put("/:keyword", (req, res) => {
   const keyword = req.params.keyword;
-  let currentNode = head;
+  let currentNode = exports.head;
   for (const char of keyword) {
     if (currentNode[char] == null) {
       currentNode[char] = {isTerminal: false};
@@ -32,10 +32,11 @@ api.put("/:keyword", (req, res) => {
 
 api.get("/:keyword", (req, res) => {
   const keyword = req.params.keyword;
-  let currentNode = head;
+  let currentNode = exports.head;
   for (const char of keyword) {
-    if (currentNode[char] == null) {
+    if (currentNode[char] === undefined) {
       res.json({result: false});
+      return;
     }
     currentNode = currentNode[char];
   }
@@ -44,7 +45,7 @@ api.get("/:keyword", (req, res) => {
 
 api.get("/autocomplete/:keyword", (req, res) => {
   const keyword = req.params.keyword;
-  let currentNode = head;
+  let currentNode = exports.head;
   for (const char of keyword) {
     if (currentNode[char] == null) {
       res.json({suggestions: []});
@@ -56,7 +57,7 @@ api.get("/autocomplete/:keyword", (req, res) => {
 
 api.delete("/:keyword", (req, res) => {
   const keyword = req.params.keyword;
-  let currentNode = head;
+  let currentNode = exports.head;
   for (const char of keyword) {
     if (currentNode[char] == null) {
       res.status(500).json({error: `${keyword} not present in trie`, succeeded: false});
@@ -72,7 +73,7 @@ api.delete("/:keyword", (req, res) => {
 })
 
 api.get("/", (req, res) => {
-  res.json({result: list(head)});
+  res.json({result: list(exports.head)});
 });
 
 const PORT = process.env.PORT || 8000;
@@ -82,3 +83,4 @@ api.listen(PORT, () => {
 })
 
 exports.list = list;
+exports.api = api; // for testing

@@ -1,5 +1,9 @@
-const assert = require("chai").assert;
+const chai = require("chai");
+const chaiHttp = require("chai-http");
+const assert = chai.assert;
 const index = require("../index.js");
+
+chai.use(chaiHttp);
 
 describe('list()', () => {
   const tests = [
@@ -87,5 +91,57 @@ describe('list()', () => {
       assert.lengthOf(res, expected.length);
       res.every((a, i) => assert.equal(a, expected[i]));
     })
+  })
+});
+
+// integration tests for sequences of commands
+describe("global state", () => {
+
+  beforeEach(() => {
+    // return Trie to initial state.
+    index.head = {
+      isTerminal: false
+    }
+  });
+
+
+  it("should add a keyword successfully", (done) => {
+    chai.request(index.api)
+      .put("/hello")
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.eql({succeeded: true});
+        done()
+      });
+  });
+
+  it("should not find a keyword not added", (done) => {
+    chai.request(index.api)
+      .get("/hello")
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.eql({result: false});
+        done()
+      })
+  })
+
+  it("should find a keyword previously added", (done) => {
+    const requester = chai.request(index.api).keepOpen();
+    Promise.all([
+      requester.get("/hello"),
+      requester.put("/hello"),
+      requester.get("/hello")
+    ]).then((responses) => {
+      responses[0].should.have.status(200);
+      responses[1].should.have.status(200);
+      responses[2].should.have.status(200);
+      responses[0].body.should.be.eql({result: false});
+      responses[2].body.should.be.eql({result: true});
+      done()
+    })
+  });
+
+  it("should add multiple keywords and find them correctly", (done) => {
+
   })
 })
