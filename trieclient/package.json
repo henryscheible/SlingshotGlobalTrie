@@ -21,5 +21,9 @@
   },
   "bin": {
     "triecli": "index.js"
-  }
+  },
+  "publishConfig": {
+    "registry":"https://npm.pkg.github.com"
+  },
+  "repository": "git://github.com/henryscheible/SlingshotGlobalTrie"
 }
