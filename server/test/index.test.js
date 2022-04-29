@@ -1,6 +1,7 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const assert = chai.assert;
+chai.should();
 const index = require("../index.js");
 
 chai.use(chaiHttp);
@@ -132,9 +133,7 @@ describe("global state", () => {
       requester.put("/hello"),
       requester.get("/hello")
     ]).then((responses) => {
-      responses[0].should.have.status(200);
-      responses[1].should.have.status(200);
-      responses[2].should.have.status(200);
+      responses.forEach((res) => res.should.have.status(200));
       responses[0].body.should.be.eql({result: false});
       responses[2].body.should.be.eql({result: true});
       done()
@@ -142,6 +141,21 @@ describe("global state", () => {
   });
 
   it("should add multiple keywords and find them correctly", (done) => {
-
+    const requester = chai.request(index.api).keepOpen();
+    Promise.all([
+      requester.get("/hello"),
+      requester.put("/hello"),
+      requester.get("/goodbye"),
+      requester.put("/goodbye"),
+      requester.get("/hello"),
+      requester.get("/goodbye"),
+    ]).then((responses) => {
+      responses.forEach((res) => res.should.have.status(200));
+      responses[0].body.should.be.eql({result: false});
+      responses[2].body.should.be.eql({result: false});
+      responses[4].body.should.be.eql({result: true});
+      responses[5].body.should.be.eql({result: true});
+      done();
+    })
   })
 })
