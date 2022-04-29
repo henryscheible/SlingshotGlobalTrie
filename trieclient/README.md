@@ -26,20 +26,37 @@ Options:
   --help     Show help                                                 [boolean]
 ```
 
-## Put Keyword
+### Put Keyword
 ```shell
 $ triecli put <keyword>
 Successfully added <keyword> to trie
 ```
 
-## Find Keyword
+### Find Keyword
 ```shell
 $ triecli find <keyword>
 ```
 
 This command will print `true` if the keyword is found and `false` if the keyword is not found
 
-## Delete Keyword
+### Delete Keyword
 ```shell
 $ triecli delete <keyword>
 ```
+
+### Autocomplete Keyword
+```shell
+$ triecli autocomplete <prefix>
+```
+This command will print out all keywords starting with `<prefix>`, each on their own line. Example:
+```shell
+$ triecli autocomplete h
+hello
+hungry
+```
+
+### Display Trie
+```shell
+$ triecli list
+```
+This command will print out all keywords in a trie one line at a time.
