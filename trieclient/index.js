@@ -1,4 +1,4 @@
-#!/user/bin/env node
+#!/usr/bin/env node
 
 require("yargs/yargs")(process.argv.slice(2))
   .option("url", {
