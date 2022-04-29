@@ -1,4 +1,4 @@
-const request = require("../request.js");
+const request = require("../client.js");
 
 exports.command = 'find <keyword>'
 

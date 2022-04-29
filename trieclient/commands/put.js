@@ -1,9 +1,9 @@
-const request = require("../request.js");
+const client = require("../client.js");
 
 exports.command = 'put <keyword>'
 
 exports.describe = 'add a keyword to the trie'
 
 exports.handler = (argv) => {
-  request.putKeyword(argv.keyword);
+  client.putKeyword(argv.keyword);
 }

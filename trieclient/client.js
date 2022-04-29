@@ -1,19 +1,22 @@
 const axios = require("axios");
 
+exports.log = console.log;
+exports.error = console.error;
+
 exports.putKeyword = (keyword) => {
   axios
     .put(`http://localhost:8000/${keyword}`)
     .then(res => {
       if (res.data.succeeded === undefined) {
-        console.error("Malformed response");
+        exports.error("Malformed response");
       } else if (res.data.succeeded) {
-        console.log(`Successfully added ${keyword} to trie`);
+        exports.log(`Successfully added ${keyword} to trie`);
       } else {
-        console.error(`Request Failed`);
+        exports.error(`Request Failed`);
       }
     })
     .catch(() => {
-      console.error("Could not connect to server");
+      exports.error("Could not connect to server");
     })
 }
 
@@ -22,13 +25,13 @@ exports.getKeyword = (keyword) => {
     .get(`http://localhost:8000/${keyword}`)
     .then(res => {
       if (res.data.result === undefined) {
-        console.error("Malformed response");
+        exports.error("Malformed response");
       } else {
-        console.log(res.data.result);
+        exports.log(res.data.result);
       }
     })
-    .catch(error => {
-      console.error(error);
+    .catch(() => {
+      exports.error("Could not connect to server");
     })
 }
 
@@ -37,15 +40,19 @@ exports.getAutocomplete = (keyword) => {
     .get(`http://localhost:8000/autocomplete/${keyword}`)
     .then(res => {
       if (res.data.suggestions === undefined) {
-        console.error("Malformed response");
+        exports.error("Malformed response");
       } else {
-        for (const suggestion of res.data.suggestions) {
-          console.log(suggestion);
+        if (res.data.suggestions.length === 0) {
+          exports.log("No suggestions");
+        } else {
+          for (const suggestion of res.data.suggestions) {
+            exports.log(suggestion);
+          }
         }
       }
     })
-    .catch(error => {
-      console.error(error);
+    .catch(() => {
+      exports.error("Could not connect to server");
     })
 }
 
@@ -54,15 +61,17 @@ exports.getTrie = () => {
     .get(`http://localhost:8000/`)
     .then(res => {
       if (res.data.result === undefined) {
-        console.error("Malformed response");
+        return({error: "Malformed response"});
       } else {
+        let returnStr = "";
         for (const keyword of res.data.result) {
-          console.log(keyword);
+          returnStr += keyword + ", ";
         }
+        return({log: returnStr.slice(0, -2)}); // remove trailing comma
       }
     })
     .catch(error => {
-      console.error(error);
+      return({error: error});
     })
 }
 
@@ -71,14 +80,14 @@ exports.deleteKeyword = (keyword) => {
     .delete(`http://localhost:8000/delete/${keyword}`)
     .then(res => {
       if (res.data.succeeded === undefined) {
-        console.error("Malformed response");
+        return({error: "Malformed response"});
       } else if (res.data.succeeded) {
-        console.log("delete successful");
+        return({log: "delete successful"});
       } else {
-        console.error("delete unsuccessful");
+        return({error: "delete unsuccessful"});
       }
     })
     .catch(error => {
-      console.error(error);
+      return({error: error});
     })
 }
