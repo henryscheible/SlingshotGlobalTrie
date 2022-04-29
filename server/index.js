@@ -76,6 +76,13 @@ api.get("/", (req, res) => {
   res.json({result: list(exports.head)});
 });
 
+api.delete("/", (req, res) => {
+  exports.head = {
+    isTerminal: false
+  };
+  res.json({succeeded: true});
+})
+
 const PORT = process.env.PORT || 8000;
 
 api.listen(PORT, () => {

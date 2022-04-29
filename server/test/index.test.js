@@ -225,5 +225,20 @@ describe("global state", () => {
     })
   });
 
+  it("should display the trie correctly", (done) => {
+    const requester = chai.request(index.api).keepOpen();
+    Promise.all([
+      requester.put("/hello"),
+      requester.put("/hungry"),
+      requester.put("/human"),
+      requester.put("/banana"),
+      requester.delete("/"),
+      requester.get("/"),
+    ]).then((responses) => {
+      responses.forEach((res) => res.should.have.status(200));
+      expect(responses[5].body.result).to.eql([]);
+      done();
+    })
+  });
 
 })
