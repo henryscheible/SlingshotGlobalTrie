@@ -173,6 +173,7 @@ describe("global state", () => {
       responses[0].body.should.be.eql({result: false});
       responses[2].body.should.be.eql({result: true});
       responses[4].body.should.be.eql({result: false});
+      responses[3].body.should.be.eql({succeeded: true});
       done();
     })
   })

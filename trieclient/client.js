@@ -79,7 +79,7 @@ exports.getTrie = (url) => {
 
 exports.deleteKeyword = (url, keyword) => {
   axios
-    .delete(`${url}delete/${keyword}`)
+    .delete(`${url}${keyword}`)
     .then(res => {
       if (res.data.succeeded === undefined) {
         exports.error("Malformed response");
